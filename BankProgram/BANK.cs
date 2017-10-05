@@ -39,6 +39,7 @@ namespace BankProgram
             GenereraKontoLista();
             GenereraKontonPerKund();
             MENY.MenyMetod(this);
+
         }
         // Metod för att generera lista med kundobjekt
         public void GenereraKundLista()
@@ -70,6 +71,21 @@ namespace BankProgram
             KUND nykund = new KUND(kunddata, NyttKundNr(), NyttKontoNr());
             kunder.Add(nykund); // Lägg till nya kunden till globala listan med kunder
             konton.Add(nykund.Kundkonton[nykund.Kundkonton.Count - 1]); // Lägg till nya konton till globala listan med konton
+            
+        }
+
+        public void TaBortKund(int kundnr) // Ta bort kund (Case4 i menyn)
+        {
+            int temp = kunder.FindIndex(x => x.Kundnummer == kundnr);
+
+            foreach (var konto in kunder[temp].Kundkonton)
+            {
+                //var temp2 = 
+                konton.Remove(konton.Find(x => x.Kontonummer == konto.Kontonummer));
+                //konton.Remove(konto);
+            }
+
+            kunder.Remove(kunder[temp]);
         }
 
         public void NyttKonto() // Skapa nytt konto
@@ -109,7 +125,7 @@ namespace BankProgram
             return temp;
         }
         
-        // Anropas från "case2" i menymetoden, sök på företagsnamn och postort
+        // Anropas från "Case1" i menymetoden, sök på företagsnamn och postort
         public void SkrivUtSökn(string sökstr) 
         {
 

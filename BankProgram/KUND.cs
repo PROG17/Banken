@@ -63,7 +63,7 @@ namespace BankProgram
             this.land = kunddata[6];
             this.telefonnummer = kunddata[7];
             this.kundkonton = new List<KONTO>();
-            kundkonton.Add(new KONTO(kontonr,kundnr));
+            kundkonton.Add(new KONTO(kontonr,kundnr)); // skapa nytt konto till kund
         }
 
         public void SkrivUtKundBild() // Anropas av menyklassen

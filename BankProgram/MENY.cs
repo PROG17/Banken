@@ -28,7 +28,7 @@ namespace BankProgram
                     case "0":
                         Console.WriteLine("Avsluta och spara");
                         // Metod för att avsluta och spara till fil
-                        // a,b
+                        
                         break;
 
                     case "1": // Sök på kundnamn eller postort
@@ -43,8 +43,7 @@ namespace BankProgram
                         Case3(banken); // Skapa kund 
                         break;
                     case "4":
-                        Console.WriteLine("Ta bort kund");
-                        // Metod som tar bort kund (går endast om saldo är noll på kontona
+                        Case4(banken); // Ta bort kund (går endast om saldo är noll på kontona)
                         break;
                     case "5":
                         Console.WriteLine("Skapa konto");
@@ -85,6 +84,7 @@ namespace BankProgram
 
         private static void Case2(BANK banken) // Visa "kundbild"
         {
+            Console.WriteLine("* Visa kundbild *");
             Console.Write("Kundnummer? ");
             var a = int.Parse(Console.ReadLine());
             var b = banken.Kunder.FindIndex(x => x.Kundnummer == a);
@@ -92,6 +92,7 @@ namespace BankProgram
         }
         private static void Case3(BANK banken) // Lägg till kund
         {
+            Console.WriteLine("* Lägg till kund *");
             Console.Write("Ange organisationnummer: ");
             var a = Console.ReadLine();
             Console.Write("Ange företagsnamn: ");
@@ -112,7 +113,15 @@ namespace BankProgram
             string[] stringarray = new[] {a, b, c, d, e, f, g, h};
 
             banken.NyKund(stringarray);
+            Console.WriteLine();
 
+        }
+        private static void Case4(BANK banken) // Ta bort kund, ska endast gå om saldot är noll
+        {
+            Console.WriteLine("* Ta bort kund *");
+            Console.Write("Kundnummer? ");
+            var a = int.Parse(Console.ReadLine());
+            banken.TaBortKund(a);
         }
 
         public static void SkrivMeny(BANK banken)
