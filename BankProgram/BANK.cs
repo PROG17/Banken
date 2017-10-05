@@ -37,7 +37,9 @@ namespace BankProgram
             GenereraKundLista();
             GenereraKontoLista();
             GenereraKontonPerKund();
-            MENY.MenyMetod(this);
+            //MENY.MenyMetod(this);
+            Console.WriteLine(NyttKundNr());
+            
         }
         // Metod för att generera lista med kundobjekt
         public void GenereraKundLista()
@@ -64,6 +66,10 @@ namespace BankProgram
 
         }
 
+        public void NyKund(string[] kunddata) // Skapa ny kund, anropas från CASE3 menyklassen
+        {
+            kunder.Add(new KUND(kunddata,NyttKundNr()));
+        }
         // Metod för att addera konton till kundkontolista
         public void GenereraKontonPerKund()
         {
@@ -74,24 +80,13 @@ namespace BankProgram
 
         }
 
-        // Skriv ut kundlista
-        public void SkrivUtKundLista()
+        public int NyttKundNr() // Returnera nytt kundnr
         {
-            foreach (var kund in kunder)
-            {
-                kund.SkrivUtKundBild();
-            }
+            List<KUND> temp = new List<KUND>();
+            temp = kunder.OrderByDescending(x => x.Kundnummer).ToList();
+            return temp[0].Kundnummer + 1;
         }
-        // Skriv ut kontolista
-        public void SkrivUtKontoLista()
-        {
-            foreach (var konto in konton)
-            {
-                konto.SkrivUtKonto();
-                
-            }
-        }
-
+        // Anropas av menyklassen
         public decimal TotaltSaldo()
         {
             decimal temp = 0.0m;
@@ -102,7 +97,8 @@ namespace BankProgram
             return temp;
         }
 
-        public void SkrivUtSökn(string sökstr) // Anropas från "case2" i menymetoden, sök på företagsnamn och postort
+        // Anropas från "case2" i menymetoden, sök på företagsnamn och postort
+        public void SkrivUtSökn(string sökstr) 
         {
 
             string sökstr2;

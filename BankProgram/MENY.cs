@@ -40,8 +40,7 @@ namespace BankProgram
                         break;
                         
                     case "3":
-                        Console.WriteLine("Skapa kund");
-                        // Metod som skapar kund
+                        Case3(banken); // Skapa kund 
                         break;
                     case "4":
                         Console.WriteLine("Ta bort kund");
@@ -91,6 +90,31 @@ namespace BankProgram
             var b = banken.Kunder.FindIndex(x => x.Kundnummer == a);
             banken.Kunder[b].SkrivUtKundBild();
         }
+        private static void Case3(BANK banken) // Lägg till kund
+        {
+            Console.Write("Ange organisationnummer: ");
+            var a = Console.ReadLine();
+            Console.Write("Ange företagsnamn: ");
+            var b = Console.ReadLine();
+            Console.Write("Ange adress: ");
+            var c = Console.ReadLine();
+            Console.Write("Ange stad: ");
+            var d = Console.ReadLine();
+            Console.Write("Ange region: ");
+            var e = Console.ReadLine();
+            Console.Write("Ange postnummer: ");
+            var f = Console.ReadLine();
+            Console.Write("Ange land: ");
+            var g = Console.ReadLine();
+            Console.Write("Ange telefonnummer: ");
+            var h = Console.ReadLine();
+
+            string[] stringarray = new[] {a, b, c, d, e, f, g, h};
+
+            banken.NyKund(stringarray);
+
+        }
+
         public static void SkrivMeny(BANK banken)
         {
             

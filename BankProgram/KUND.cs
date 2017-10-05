@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,42 +38,67 @@ namespace BankProgram
 
         // Constructor
 
-        public KUND(string[] kunddata)
+        public KUND(string[] kunddata) // Används när kundobjekten skapas från fildata
         {
             this.kundnummer = int.Parse(kunddata[0]);
             this.organisationnummer = kunddata[1];
             this.företagsnamn = kunddata[2];
             this.adress = kunddata[3];
             this.stad = kunddata[4];
-            this.Region = kunddata[5];
-            this.Postnummer = kunddata[6];
-            this.Land = kunddata[7];
-            this.Telefonnummer = kunddata[8];
-            this.Kundkonton = new List<KONTO>();
+            this.region = kunddata[5];
+            this.postnummer = kunddata[6];
+            this.land = kunddata[7];
+            this.telefonnummer = kunddata[8];
+            this.kundkonton = new List<KONTO>();
+        }
+        public KUND(string[] kunddata, int kundnr) // Används vid skapande av ny kund
+        {
+            this.organisationnummer = kunddata[0];
+            this.företagsnamn = kunddata[1];
+            this.adress = kunddata[2];
+            this.stad = kunddata[3];
+            this.region = kunddata[4];
+            this.postnummer = kunddata[5];
+            this.land = kunddata[6];
+            this.telefonnummer = kunddata[7];
+            this.kundkonton = new List<KONTO>();
         }
 
-        public void SkrivUtKundBild()
+        public void SkrivUtKundBild() // Anropas av menyklassen
         {
-            Console.WriteLine(kundnummer);
-            Console.WriteLine(organisationnummer);
-            Console.WriteLine(företagsnamn);
-            Console.WriteLine(adress);
-            Console.WriteLine(stad);
-            Console.WriteLine(region);
-            Console.WriteLine(postnummer);
-            Console.WriteLine(land);
-            Console.WriteLine(telefonnummer);
+            Console.WriteLine();
+            Console.WriteLine($"Kundnummer: {kundnummer}");
+            Console.WriteLine($"Organisationnummer: {organisationnummer}");
+            Console.WriteLine($"Företagsnamn: {företagsnamn}");
+            Console.WriteLine($"Stad: {stad}");
+            Console.WriteLine($"Region: {region}");
+            Console.WriteLine($"Postnummer: {postnummer}");
+            Console.WriteLine($"Land: {land}");
+            Console.WriteLine($"Telefonnummer: {telefonnummer}");
 
+            Console.WriteLine();
+            Console.WriteLine("Konton");
             foreach (var item in Kundkonton)
             {
-                Console.WriteLine(item.Kontonummer);
+                Console.WriteLine($"Kontonummer: {item.Kontonummer} Saldo: {item.Saldo}");
             }
-
+            SkrivUtTotaltSaldo();
         }
-
+        
         public void SkrivUtKundNr()
         {
             Console.WriteLine("{0}: {1}",kundnummer,företagsnamn);
+        }
+
+        private void SkrivUtTotaltSaldo()
+        {
+            decimal temp = 0;
+            foreach (var item in kundkonton)
+            {
+                temp += item.Saldo;
+
+            }
+            Console.WriteLine("Totalt saldo: {0}",temp);
         }
 
     }
