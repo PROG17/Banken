@@ -51,8 +51,9 @@ namespace BankProgram
             this.telefonnummer = kunddata[8];
             this.kundkonton = new List<KONTO>();
         }
-        public KUND(string[] kunddata, int kundnr) // Används vid skapande av ny kund
+        public KUND(string[] kunddata, int kundnr, int kontonr) // Används vid skapande av ny kund
         {
+            this.kundnummer = kundnr;
             this.organisationnummer = kunddata[0];
             this.företagsnamn = kunddata[1];
             this.adress = kunddata[2];
@@ -62,6 +63,7 @@ namespace BankProgram
             this.land = kunddata[6];
             this.telefonnummer = kunddata[7];
             this.kundkonton = new List<KONTO>();
+            kundkonton.Add(new KONTO(kontonr,kundnr));
         }
 
         public void SkrivUtKundBild() // Anropas av menyklassen

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,9 +38,7 @@ namespace BankProgram
             GenereraKundLista();
             GenereraKontoLista();
             GenereraKontonPerKund();
-            //MENY.MenyMetod(this);
-            Console.WriteLine(NyttKundNr());
-            
+            MENY.MenyMetod(this);
         }
         // Metod för att generera lista med kundobjekt
         public void GenereraKundLista()
@@ -68,7 +67,14 @@ namespace BankProgram
 
         public void NyKund(string[] kunddata) // Skapa ny kund, anropas från CASE3 menyklassen
         {
-            kunder.Add(new KUND(kunddata,NyttKundNr()));
+            KUND nykund = new KUND(kunddata, NyttKundNr(), NyttKontoNr());
+            kunder.Add(nykund); // Lägg till nya kunden till globala listan med kunder
+            konton.Add(nykund.Kundkonton[nykund.Kundkonton.Count - 1]); // Lägg till nya konton till globala listan med konton
+        }
+
+        public void NyttKonto() // Skapa nytt konto
+        {
+            //konton.Add(new KONTO(NyttKontoNr(),));
         }
         // Metod för att addera konton till kundkontolista
         public void GenereraKontonPerKund()
@@ -86,6 +92,12 @@ namespace BankProgram
             temp = kunder.OrderByDescending(x => x.Kundnummer).ToList();
             return temp[0].Kundnummer + 1;
         }
+        public int NyttKontoNr() // Returnera nytt kontonr
+        {
+            List<KONTO> temp = new List<KONTO>();
+            temp = konton.OrderByDescending(x => x.Kontonummer).ToList();
+            return temp[0].Kontonummer + 1;
+        }
         // Anropas av menyklassen
         public decimal TotaltSaldo()
         {
@@ -96,7 +108,7 @@ namespace BankProgram
             }
             return temp;
         }
-
+        
         // Anropas från "case2" i menymetoden, sök på företagsnamn och postort
         public void SkrivUtSökn(string sökstr) 
         {
