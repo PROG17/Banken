@@ -104,8 +104,17 @@ namespace BankProgram
 
         public void SkrivUtSökn(string sökstr) // Anropas från "case2" i menymetoden, sök på företagsnamn och postort
         {
-           
-            foreach (var kund in kunder.Where(x => x.Företagsnamn.Contains(sökstr) || x.Postnummer.Contains(sökstr)))
+
+            string sökstr2;
+            StringBuilder sb = new StringBuilder();
+            sb.Append(sökstr);
+            sb.Insert(0, " ");
+            sökstr2 = sb.ToString().ToUpper(); // sökstr2 används för att få träff på ord i företagsnamn som består
+            // av flera ord
+
+            foreach (var kund in kunder.Where(x => x.Företagsnamn.ToUpper().StartsWith(sökstr.ToUpper()) ||
+                                                   x.Företagsnamn.ToUpper().Contains(sökstr2)
+                                                   || x.Postnummer.Contains(sökstr)))
             {
                 kund.SkrivUtKundNr();
             }
