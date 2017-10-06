@@ -80,13 +80,18 @@ namespace BankProgram
 
             Console.WriteLine();
             Console.WriteLine("Konton");
+            SkrivUtKundKonton();
+            SkrivUtTotaltSaldo();
+        }
+
+        public void SkrivUtKundKonton()
+        {
             foreach (var item in Kundkonton)
             {
                 Console.WriteLine($"Kontonummer: {item.Kontonummer} Saldo: {item.Saldo}");
             }
-            SkrivUtTotaltSaldo();
         }
-        
+
         public void SkrivUtKundNr()
         {
             Console.WriteLine("{0}: {1}",kundnummer,företagsnamn);

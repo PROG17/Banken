@@ -96,18 +96,33 @@ namespace BankProgram
 
             foreach (var konto in kunder[temp].Kundkonton)
             {
-                //var temp2 = 
+                // Ta bort alla kundens konton från globala listan med alla bankkonton
                 konton.Remove(konton.Find(x => x.Kontonummer == konto.Kontonummer));
-                //konton.Remove(konto);
             }
 
+            // Ta bort kunden från listan med kunder
             kunder.Remove(kunder[temp]);
         }
 
-        public void NyttKonto() // Skapa nytt konto
+        public void TaBortKonto(int kundnr, int kontonr)
         {
-            //konton.Add(new KONTO(NyttKontoNr(),));
+            // Hitta index för kontonumret i global listan med konton 
+            var temp1 = Konton.FindIndex(x => x.Kontonummer == kontonr);
+
+            // Hitta index för kundnumret i global listan med kunder 
+            var temp2 = Kunder.FindIndex(x => x.Kundnummer == kundnr);
+
+            // Hitta index för kontonumret i kundkontolistan 
+            var temp3 = Kunder[temp2].Kundkonton.FindIndex(x => x.Kontonummer == kontonr);
+
+            // Ta bort kontot från kundkontolistan
+            kunder[temp2].Kundkonton.Remove(Kunder[temp2].Kundkonton[temp3]);
+
+            // Ta bort kontot från globala listan med konton
+            konton.Remove(konton[temp1]);
         }
+
+        
         // Metod för att addera konton till kundkontolista
         public void GenereraKontonPerKund()
         {

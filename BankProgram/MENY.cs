@@ -46,13 +46,10 @@ namespace BankProgram
                         Case4(banken); // Ta bort kund (går endast om saldo är noll på kontona)
                         break;
                     case "5":
-                        Case5(banken);
-                        Console.WriteLine("Skapa konto");
-                        // Metod som skapar konto
+                        Case5(banken); // Skapa nytt konto
                         break;
                     case "6":
-                        Console.WriteLine("Ta bort konto");
-                        // Metod som tar bort konto
+                        Case6(banken); // Ta bort konto (endast om saldo = 0)
                         break;
                     case "7":
                         Console.WriteLine("Insättning");
@@ -131,6 +128,19 @@ namespace BankProgram
             var a = int.Parse(Console.ReadLine());
             banken.NyttKonto(a);
         }
+
+        private static void Case6(BANK banken) // Ta bort ett konto, ska endast gå om saldot är nolld
+        {
+            Console.WriteLine("* Ta bort konto *");
+            Console.Write("Kundnummer? ");
+            var a = int.Parse(Console.ReadLine());
+            var b = banken.Kunder.FindIndex(x => x.Kundnummer == a);
+            banken.Kunder[b].SkrivUtKundKonton();
+            Console.Write("Kontonummer? ");
+            var c = int.Parse(Console.ReadLine());
+            banken.TaBortKonto(a, c);
+        }
+
         public static void SkrivMeny(BANK banken)
         {
             
