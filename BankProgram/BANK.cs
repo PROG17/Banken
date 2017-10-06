@@ -137,8 +137,10 @@ namespace BankProgram
             kunder.Add(nykund); 
             
             // Lägg till nya konton till globala listan med konton
-            konton.Add(nykund.Kundkonton[nykund.Kundkonton.Count - 1]); 
-            
+            konton.Add(nykund.Kundkonton[nykund.Kundkonton.Count - 1]);
+            Console.WriteLine("Ny kund med nummer {0} skapades",nykund.Kundnummer);
+            Console.WriteLine("Kunden fick ett konto med nummer {0}", nykund.Kundkonton[0].Kontonummer);
+
         }
         public void NyttKonto(int kundnr) // Skapa nytt konto, CASE5 i menyklassen
         {
@@ -149,7 +151,9 @@ namespace BankProgram
             kunder[temp].Kundkonton.Add(new KONTO(NyttKontoNr(),kundnr));
             
             // Lägg till nya kontot till globala listan med konton
-            konton.Add(kunder[temp].Kundkonton[kunder[temp].Kundkonton.Count - 1]); 
+            konton.Add(kunder[temp].Kundkonton[kunder[temp].Kundkonton.Count - 1]);
+
+            Console.WriteLine("Konto med nummer {0} skapades för kund {1}",konton[konton.Count-1].Kontonummer,konton[konton.Count-1].Kundnummer);
 
         }
 
@@ -178,11 +182,15 @@ namespace BankProgram
             // Hitta index för kontonumret i kundkontolistan 
             var temp3 = Kunder[temp2].Kundkonton.FindIndex(x => x.Kontonummer == kontonr);
 
+            Console.WriteLine("Kontot {0} togs bort från kund {1}",kontonr,kundnr);
+
             // Ta bort kontot från kundkontolistan
             kunder[temp2].Kundkonton.Remove(Kunder[temp2].Kundkonton[temp3]);
 
             // Ta bort kontot från globala listan med konton
             konton.Remove(konton[temp1]);
+
+
         }
         public void Insättning(int kontonr, decimal summa) // Case 7
         {
@@ -192,12 +200,17 @@ namespace BankProgram
             konton[temp1].Saldo += summa; // Addera summan till kontot
             
         }
-        public void Uttag(int kontonr, decimal summa) // Case 8
+        public bool Uttag(int kontonr, decimal summa) // Case 8
         {
             // Hitta index för kontonumret i global listan med konton 
-            var temp1 = Konton.FindIndex(x => x.Kontonummer == kontonr);
+            var temp = Konton.FindIndex(x => x.Kontonummer == kontonr);
 
-            konton[temp1].Saldo -= summa; // Subtrahera summan från kontot
+            if (summa <= konton[temp].Saldo)
+            {
+                konton[temp].Saldo -= summa; // Subtrahera summan från kontot om tillräckligt med pengar finns
+                return true;
+            }
+            return false;
 
         }
         public void Överföring(int frånkontonr, int tillkontonr, decimal summa) // Case9

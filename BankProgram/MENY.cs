@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -136,15 +137,36 @@ namespace BankProgram
         {
             Console.WriteLine("* Ta bort kund *");
             Console.Write("Kundnummer? ");
-            var a = int.Parse(Console.ReadLine());
-            banken.TaBortKund(a);
+            int a;
+            var temp = int.TryParse(Console.ReadLine(), out a);
+            if (temp)
+            {
+                if (banken.Kunder.Exists(x => x.Kundnummer == a))
+                {
+                    if (banken.Kunder.Exists(x => x.Kundkonton.Count == 0))
+                        banken.TaBortKund(a);
+                    else Console.WriteLine("Det går inte att ta bort en kund som har konton!");
+                }
+                else Console.WriteLine("Det kundnumret finns inte!");
+            }
+            else Console.WriteLine("Ange kundnumret i siffror!");
         }
         private static void Case5(BANK banken) // Skapa konto
         {
             Console.WriteLine("* Skapa konto *");
             Console.Write("Kundnummer? ");
-            var a = int.Parse(Console.ReadLine());
-            banken.NyttKonto(a);
+            int a;
+            var temp = int.TryParse(Console.ReadLine(), out a);
+            if (temp)
+            {
+                if (banken.Kunder.Exists(x => x.Kundnummer == a))
+                {
+                    banken.NyttKonto(a);
+                }
+                else Console.WriteLine("Det kundnumret finns inte!");
+            }
+            else Console.WriteLine("Ange kundnumret i siffror!");
+
         }
 
         private static void Case6(BANK banken) // Ta bort ett konto, ska endast gå om saldot är nolld
@@ -182,28 +204,52 @@ namespace BankProgram
         private static void Case7(BANK banken) // Sätta in pengar
         {
             Console.WriteLine("* Insättning *");
-            Console.Write("Kundnummer? ");
-            var a = int.Parse(Console.ReadLine());
-            var b = banken.Kunder.FindIndex(x => x.Kundnummer == a);
-            banken.Kunder[b].SkrivUtKundKonton();
             Console.Write("Kontonummer? ");
-            var c = int.Parse(Console.ReadLine());
-            Console.Write("Summa? ");
-            var d = decimal.Parse(Console.ReadLine());
-            banken.Insättning(c, d); // int kontonr, decimal summa
+            int a;
+            decimal b;
+            var temp = int.TryParse(Console.ReadLine(), out a);
+            if (temp)
+            {
+                Console.Write("Summa? ");
+                temp = decimal.TryParse(Console.ReadLine(), out b);
+                if (temp)
+                {
+                    if (b > 0.00m)
+                        banken.Insättning(a, b); // int kontonr, decimal summa
+                    else Console.WriteLine("Summan måste vara positiv!");
+                }
+                else Console.WriteLine("Skriv summan med siffror och kommatecken för decimaler!");
+            }
+            else Console.WriteLine("Ange kundnumret i siffror!");
         }
         private static void Case8(BANK banken) // Ta ut pengar
         {
             Console.WriteLine("* Uttag *");
-            Console.Write("Kundnummer? ");
-            var a = int.Parse(Console.ReadLine());
-            var b = banken.Kunder.FindIndex(x => x.Kundnummer == a);
-            banken.Kunder[b].SkrivUtKundKonton();
             Console.Write("Kontonummer? ");
-            var c = int.Parse(Console.ReadLine());
-            Console.Write("Summa? ");
-            var d = decimal.Parse(Console.ReadLine());
-            banken.Uttag(c, d); // int kontonr, decimal summa
+            int a;
+            decimal b;
+            var temp = int.TryParse(Console.ReadLine(), out a);
+            if (temp)
+            {
+                Console.Write("Summa? ");
+                temp = decimal.TryParse(Console.ReadLine(), out b);
+                if (temp)
+                {
+                    if (banken.Konton.Exists(x => x.Kontonummer == a))
+                    {
+                        if (b > 0.00m)
+                        {
+                            if (banken.Uttag(a, b)) // int kontonr, decimal summa
+                                Console.WriteLine($"{b} kr togs ut från konto {a} ");
+                            else Console.WriteLine("Summan måste vara mindre eller lika med saldot");
+                        }
+                        else Console.WriteLine("Summan måste vara positiv!");
+                    }
+                    else Console.WriteLine("Det kontonumret existerar inte!");
+                }
+                else Console.WriteLine("Skriv summan med siffror och kommatecken för decimaler!");
+            }
+            
         }
         private static void Case9(BANK banken) // Överföring
         {
