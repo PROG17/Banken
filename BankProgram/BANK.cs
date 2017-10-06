@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,24 +16,27 @@ namespace BankProgram
         private List<KUND> kunder;
         private List<KONTO> konton;
         private FILHANTERING fil_In_Ut;
+        private int antalkonton;
+        private int antalkunder;
         
         // Properties
         
         internal List<KUND> Kunder { get => kunder; set => kunder = value; }
         internal List<KONTO> Konton { get => konton; set => konton = value; }
         internal FILHANTERING Fil_In_Ut { get => fil_In_Ut; set => fil_In_Ut = value; }
+        public int Antalkonton { get => konton.Count; set => antalkonton = value; }
+        public int Antalkunder { get => kunder.Count; set => antalkunder = value; }
 
         // Konstruktor
         public BANK()
         {
-            //this.fil_In_Ut = new FILHANTERING("bankdata-small.txt");
-            this.fil_In_Ut = new FILHANTERING("bankdata.txt");
+            this.fil_In_Ut = new FILHANTERING("bankdata-small.txt");
+            //this.fil_In_Ut = new FILHANTERING("bankdata.txt");
             this.kunder = new List<KUND>();
             this.konton = new List<KONTO>();
             
         }
-        // Huvudmetod i banken
-        public void Start()
+        public void Start() // Metod för att starta upp bankprogrammet
         {
             fil_In_Ut.LäsFil();
             GenereraKundLista();
@@ -41,32 +45,91 @@ namespace BankProgram
             MENY.MenyMetod(this);
 
         }
-        // Metod för att generera lista med kundobjekt
+
+        public void Stop() // Metod för att avsluta bankprogrammet
+        {
+            DegenereraKundLista();
+            DegenereraKontoLista();
+            fil_In_Ut.SkrivFil(Antalkunder, Antalkonton);
+        }
+        // Metod för att generera lista med kundobjekt, anropas då banken startas
         public void GenereraKundLista()
         {
             string[] temp;
+
             foreach (var kunddata in fil_In_Ut.KundINdata)
             {
                 temp = kunddata.Split(';');
                 kunder.Add(new KUND(temp));
             }
-            //return Kunder;
         }
-        //// Metod för att generera lista med kontoobjekt
+        public void DegenereraKundLista() // Anropas av Stop-metoden, formaterar för filhanteringen
+        {
+            StringBuilder temp = new StringBuilder();
+
+            foreach (var kunddata in kunder)
+            {
+                temp.Clear();
+                temp.Append(kunddata.Kundnummer.ToString());
+                temp.Append(';');
+                temp.Append(kunddata.Organisationnummer);
+                temp.Append(';');
+                temp.Append(kunddata.Företagsnamn);
+                temp.Append(';');
+                temp.Append(kunddata.Adress);
+                temp.Append(';');
+                temp.Append(kunddata.Stad);
+                temp.Append(';');
+                temp.Append(kunddata.Region);
+                temp.Append(';');
+                temp.Append(kunddata.Postnummer);
+                temp.Append(';');
+                temp.Append(kunddata.Land);
+                temp.Append(';');
+                temp.Append(kunddata.Telefonnummer);
+                fil_In_Ut.KundUTdata.Add(temp.ToString());
+            }
+        }
+        public void DegenereraKontoLista() // Anropas av Stop-metoden, formaterar för filhanteringen
+        {
+            StringBuilder temp = new StringBuilder();
+
+            foreach (var kontodata in konton)
+            {
+                temp.Clear();
+                temp.Append(kontodata.Kontonummer.ToString());
+                temp.Append(';');
+                temp.Append(kontodata.Kundnummer.ToString());
+                temp.Append(';');
+                temp.Append(kontodata.Saldo.ToString(CultureInfo.InvariantCulture));
+                
+                fil_In_Ut.KontoUTdata.Add(temp.ToString());
+            }
+            
+        }
+        //// Metod för att generera lista med kontoobjekt, anropas då banken startas
         public void GenereraKontoLista()
         {
             string[] temp;
+
             foreach (var kontodata in fil_In_Ut.KontoINdata)
             {
                 temp = kontodata.Split(';');
 
                 konton.Add(new KONTO(temp));
             }
-            //return Konton;
-
         }
 
-        public void NyKund(string[] kunddata) // Skapa ny kund, anropas från CASE3 i menyklassen
+        // Metod för att addera konton till kundkontolista, anropas då banken startas
+        public void GenereraKontonPerKund()
+        {
+            foreach (var kund in kunder)
+            {
+                kund.Kundkonton.AddRange(konton.Where(x => x.Kundnummer == kund.Kundnummer));
+            }
+
+        }
+        public void NyKund(string[] kunddata) // Skapa ny kund, CASE3 i menyklassen
         {
             KUND nykund = new KUND(kunddata, NyttKundNr(), NyttKontoNr());
             
@@ -77,7 +140,7 @@ namespace BankProgram
             konton.Add(nykund.Kundkonton[nykund.Kundkonton.Count - 1]); 
             
         }
-        public void NyttKonto(int kundnr) // Skapa nytt konto, anropas från CASE5 i menyklassen
+        public void NyttKonto(int kundnr) // Skapa nytt konto, CASE5 i menyklassen
         {
             // Hitta index för kundnumret i listan med kunder 
             var temp = Kunder.FindIndex(x => x.Kundnummer == kundnr);
@@ -104,7 +167,7 @@ namespace BankProgram
             kunder.Remove(kunder[temp]);
         }
 
-        public void TaBortKonto(int kundnr, int kontonr)
+        public void TaBortKonto(int kundnr, int kontonr) // Case 6
         {
             // Hitta index för kontonumret i global listan med konton 
             var temp1 = Konton.FindIndex(x => x.Kontonummer == kontonr);
@@ -121,32 +184,49 @@ namespace BankProgram
             // Ta bort kontot från globala listan med konton
             konton.Remove(konton[temp1]);
         }
-
-        
-        // Metod för att addera konton till kundkontolista
-        public void GenereraKontonPerKund()
+        public void Insättning(int kontonr, decimal summa) // Case 7
         {
-            foreach (var kund in kunder)
-            {
-                kund.Kundkonton.AddRange(konton.Where(x => x.Kundnummer == kund.Kundnummer));
-            }            
+            // Hitta index för kontonumret i global listan med konton 
+            var temp1 = Konton.FindIndex(x => x.Kontonummer == kontonr);
+
+            konton[temp1].Saldo += summa; // Addera summan till kontot
+            
+        }
+        public void Uttag(int kontonr, decimal summa) // Case 8
+        {
+            // Hitta index för kontonumret i global listan med konton 
+            var temp1 = Konton.FindIndex(x => x.Kontonummer == kontonr);
+
+            konton[temp1].Saldo -= summa; // Subtrahera summan från kontot
 
         }
+        public void Överföring(int frånkontonr, int tillkontonr, decimal summa) // Case9
+        {
+            // Hitta index för kontonumret(från) i global listan med konton 
+            var temp1 = Konton.FindIndex(x => x.Kontonummer == frånkontonr);
 
-        public int NyttKundNr() // Returnera nytt kundnr
+            // Hitta index för kontonumret(till) i global listan med konton 
+            var temp2 = Konton.FindIndex(x => x.Kontonummer == tillkontonr);
+
+            konton[temp1].Saldo -= summa; // Subtrahera summan från frånkontot
+            konton[temp2].Saldo += summa; // Addera summan till destinationskontot
+
+        }        
+
+        public int NyttKundNr() // Returnera nytt kundnr (högsta kundnr i listan + 1)
         {
             List<KUND> temp = new List<KUND>();
             temp = kunder.OrderByDescending(x => x.Kundnummer).ToList();
             return temp[0].Kundnummer + 1;
         }
-        public int NyttKontoNr() // Returnera nytt kontonr
+        public int NyttKontoNr() // Returnera nytt kontonr (högsta kontonr i listan + 1)
         {
             List<KONTO> temp = new List<KONTO>();
             temp = konton.OrderByDescending(x => x.Kontonummer).ToList();
             return temp[0].Kontonummer + 1;
         }
-        // Anropas av menyklassen
-        public decimal TotaltSaldo()
+        
+        public decimal TotaltSaldo() // Anropas av menyklassen då menyn skrivs ut
         {
             decimal temp = 0.0m;
             foreach (var konto in Konton)
@@ -156,8 +236,7 @@ namespace BankProgram
             return temp;
         }
         
-        // Anropas från "Case1" i menymetoden, sök på företagsnamn och postort
-        public void SkrivUtSökn(string sökstr) 
+        public void SkrivUtSökn(string sökstr)  // Anropas från "Case1" i menymetoden 
         {
 
             string sökstr2;

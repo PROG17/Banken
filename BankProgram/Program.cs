@@ -15,8 +15,7 @@ namespace BankProgram
             BANK seb = new BANK();
             
             seb.Start();
-            //seb.SkrivUtKundLista();
-            //seb.SkrivUtKontoLista();
+            
         }
     }
 }

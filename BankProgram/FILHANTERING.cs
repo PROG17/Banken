@@ -13,12 +13,16 @@ namespace BankProgram
         private string filnamn;
         private List<string> kontoINdata;
         private List<string> kundINdata;
-
+        private List<string> kontoUTdata;
+        private List<string> kundUTdata;
+ 
         // Properties
 
         public string Filnamn { get => filnamn; set => filnamn = value; }
         public List<string> KontoINdata { get => kontoINdata; set => kontoINdata = value; }
         public List<string> KundINdata { get => kundINdata; set => kundINdata = value; }
+        public List<string> KontoUTdata { get => kontoUTdata; set => kontoUTdata = value; }
+        public List<string> KundUTdata { get => kundUTdata; set => kundUTdata = value; }
 
         // Konstruktor
         public FILHANTERING(string filnamn)
@@ -26,9 +30,11 @@ namespace BankProgram
             this.filnamn = filnamn;
             this.kundINdata = new List<string>();
             this.kontoINdata = new List<string>();
+            this.kundUTdata = new List<string>();
+            this.kontoUTdata = new List<string>();
         }
         
-        // Metod för att läsa fil med bankdata
+        // Metod för att läsa fil med bankdata och mellanlagra i listor
 
         public void LäsFil()
         {
@@ -39,7 +45,7 @@ namespace BankProgram
             string line3;
             int antalkunder;
             int antalkonton;
-
+            
             line = reader.ReadLine();
             antalkunder = Int32.Parse(line);
 
@@ -62,8 +68,32 @@ namespace BankProgram
             
         }
 
-       // public void Hämta
+        // Metod för att skriva bankdata till fil
 
-        // Metod för att skriva till fil med bankdata
+        public void SkrivFil(int antalkunder, int antalkonton)
+        {
+
+            var filnamn2 = DateTime.Now.ToString("yyyyMMdd-HHmm") + ".txt";
+            StreamWriter writer = new StreamWriter(filnamn2);
+            
+            Console.WriteLine($"Sparar till {filnamn2}");
+            
+            writer.WriteLine(antalkunder.ToString()); // Skriv antal kunder på första raden till fil
+
+            foreach (var kund in KundUTdata) // Skriv ut alla kunder till fil
+            {
+                writer.WriteLine(kund);
+            }
+
+            writer.WriteLine(antalkonton.ToString()); // Skriv ut antal konton på separat rad i filen
+
+            foreach (var konto in KontoUTdata) // Skriv ut alla konton till fil
+            {
+                writer.WriteLine(konto);
+            }
+            
+            writer.Close(); // Stäng filskrivning
+        }
+
     }
 }

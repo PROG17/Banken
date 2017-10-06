@@ -26,7 +26,7 @@ namespace BankProgram
                 {
                     
                     case "0":
-                        Console.WriteLine("Avsluta och spara");
+                        Case0(banken);
                         // Metod för att avsluta och spara till fil
                         
                         break;
@@ -52,16 +52,13 @@ namespace BankProgram
                         Case6(banken); // Ta bort konto (endast om saldo = 0)
                         break;
                     case "7":
-                        Console.WriteLine("Insättning");
-                        // Metod som sätter in pengar på konto +saldo
+                        Case7(banken); // Insättning +saldo
                         break;
                     case "8":
-                        Console.WriteLine("Uttag");
-                        // Metod som tar ut pengar -saldo
+                        Case8(banken); // Uttag -saldo
                         break;
                     case "9":
-                        Console.WriteLine("Överföring");
-                        // Metod som för över pengar från ett kundkonto till annat kundkonto
+                        Case9(banken); // Överföring
                         break;
                     default:
                         Console.WriteLine("Default case");
@@ -70,7 +67,11 @@ namespace BankProgram
             }
         }
 
-        
+        private static void Case0(BANK banken) // Avsluta och spara
+        {
+            Console.WriteLine("* Avsluta och spara *");
+            banken.Stop();
+        }
 
         private static void Case1(BANK banken) // Sök på kundnamn eller postort
         {
@@ -140,8 +141,49 @@ namespace BankProgram
             var c = int.Parse(Console.ReadLine());
             banken.TaBortKonto(a, c);
         }
-
-        public static void SkrivMeny(BANK banken)
+        private static void Case7(BANK banken) // Sätta in pengar
+        {
+            Console.WriteLine("* Insättning *");
+            Console.Write("Kundnummer? ");
+            var a = int.Parse(Console.ReadLine());
+            var b = banken.Kunder.FindIndex(x => x.Kundnummer == a);
+            banken.Kunder[b].SkrivUtKundKonton();
+            Console.Write("Kontonummer? ");
+            var c = int.Parse(Console.ReadLine());
+            Console.Write("Summa? ");
+            var d = decimal.Parse(Console.ReadLine());
+            banken.Insättning(c, d); // int kontonr, decimal summa
+        }
+        private static void Case8(BANK banken) // Ta ut pengar
+        {
+            Console.WriteLine("* Uttag *");
+            Console.Write("Kundnummer? ");
+            var a = int.Parse(Console.ReadLine());
+            var b = banken.Kunder.FindIndex(x => x.Kundnummer == a);
+            banken.Kunder[b].SkrivUtKundKonton();
+            Console.Write("Kontonummer? ");
+            var c = int.Parse(Console.ReadLine());
+            Console.Write("Summa? ");
+            var d = decimal.Parse(Console.ReadLine());
+            banken.Uttag(c, d); // int kontonr, decimal summa
+        }
+        private static void Case9(BANK banken) // Överföring
+        {
+            Console.WriteLine("* Överföring *");
+            Console.Write("Kundnummer? ");
+            var a = int.Parse(Console.ReadLine());
+            var b = banken.Kunder.FindIndex(x => x.Kundnummer == a);
+            banken.Kunder[b].SkrivUtKundKonton();
+            Console.Write("Från? ");
+            var c = int.Parse(Console.ReadLine());
+            Console.Write("Till? ");
+            var d = int.Parse(Console.ReadLine());
+            Console.Write("Summa? ");
+            var e = decimal.Parse(Console.ReadLine());
+            
+            banken.Överföring(c, d, e); // int frånkontonr, int tillkontonr, decimal summa
+        }
+        public static void SkrivMeny(BANK banken) // Skriv ut bankmeny
         {
             
             Console.WriteLine("******************************");
