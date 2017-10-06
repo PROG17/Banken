@@ -198,7 +198,8 @@ namespace BankProgram
             var temp1 = Konton.FindIndex(x => x.Kontonummer == kontonr);
 
             konton[temp1].Saldo += summa; // Addera summan till kontot
-            
+
+            Console.WriteLine($"{summa} kr sattes in på konto {kontonr}");
         }
         public bool Uttag(int kontonr, decimal summa) // Case 8
         {

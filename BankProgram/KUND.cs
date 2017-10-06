@@ -88,7 +88,7 @@ namespace BankProgram
         {
             foreach (var item in Kundkonton)
             {
-                Console.WriteLine($"Kontonummer: {item.Kontonummer} Saldo: {item.Saldo}");
+                Console.WriteLine($"Kontonummer: {item.Kontonummer} Saldo: {item.Saldo} kr");
             }
         }
 
@@ -105,7 +105,7 @@ namespace BankProgram
                 temp += item.Saldo;
 
             }
-            Console.WriteLine("Totalt saldo: {0}",temp);
+            Console.WriteLine("Totalt saldo: {0} kr",temp);
         }
 
     }

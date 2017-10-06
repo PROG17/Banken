@@ -254,18 +254,34 @@ namespace BankProgram
         private static void Case9(BANK banken) // Överföring
         {
             Console.WriteLine("* Överföring *");
-            Console.Write("Kundnummer? ");
-            var a = int.Parse(Console.ReadLine());
-            var b = banken.Kunder.FindIndex(x => x.Kundnummer == a);
-            banken.Kunder[b].SkrivUtKundKonton();
-            Console.Write("Från? ");
-            var c = int.Parse(Console.ReadLine());
-            Console.Write("Till? ");
-            var d = int.Parse(Console.ReadLine());
-            Console.Write("Summa? ");
-            var e = decimal.Parse(Console.ReadLine());
             
-            banken.Överföring(c, d, e); // int frånkontonr, int tillkontonr, decimal summa
+            Console.Write("Från? ");
+            int a;
+            int b;
+            decimal c;
+
+            var tempA = int.TryParse(Console.ReadLine(), out a);
+            Console.Write("Från? ");
+
+            var tempB = int.TryParse(Console.ReadLine(), out b);
+            Console.Write("Till? ");
+
+            Console.Write("Summa? ");
+            var tempC = decimal.TryParse(Console.ReadLine(), out c);
+            if (tempA && tempB && tempC)
+            {
+                if (banken.Konton.Exists(x => x.Kontonummer == a) && banken.Konton.Exists(x => x.Kontonummer == b))
+                {
+                    banken.Överföring(a, b, c); // int frånkontonr, int tillkontonr, decimal summa
+
+                    //  Kvarstår att fixa att det måste finnas täckning på frånkontot vid överföring!!!!
+
+                    //banken.Uttag(a, b) // int kontonr, decimal summa
+                    // banken.Insättning(a, b); // int kontonr, decimal summa
+                }
+                else Console.WriteLine("Både kontona måste existera!");
+            }
+            else Console.WriteLine("Skriv kontonummer med siffror och summa med siffror och kommatecken!");
         }
         public static void SkrivMeny(BANK banken) // Skriv ut bankmeny
         {
