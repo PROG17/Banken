@@ -66,12 +66,28 @@ namespace BankProgram
 
         }
 
-        public void NyKund(string[] kunddata) // Skapa ny kund, anropas från CASE3 menyklassen
+        public void NyKund(string[] kunddata) // Skapa ny kund, anropas från CASE3 i menyklassen
         {
             KUND nykund = new KUND(kunddata, NyttKundNr(), NyttKontoNr());
-            kunder.Add(nykund); // Lägg till nya kunden till globala listan med kunder
-            konton.Add(nykund.Kundkonton[nykund.Kundkonton.Count - 1]); // Lägg till nya konton till globala listan med konton
             
+            // Lägg till nya kunden till globala listan med kunder
+            kunder.Add(nykund); 
+            
+            // Lägg till nya konton till globala listan med konton
+            konton.Add(nykund.Kundkonton[nykund.Kundkonton.Count - 1]); 
+            
+        }
+        public void NyttKonto(int kundnr) // Skapa nytt konto, anropas från CASE5 i menyklassen
+        {
+            // Hitta index för kundnumret i listan med kunder 
+            var temp = Kunder.FindIndex(x => x.Kundnummer == kundnr);
+            
+            // Lägg till nya kontot till kundkontolistan
+            kunder[temp].Kundkonton.Add(new KONTO(NyttKontoNr(),kundnr));
+            
+            // Lägg till nya kontot till globala listan med konton
+            konton.Add(kunder[temp].Kundkonton[kunder[temp].Kundkonton.Count - 1]); 
+
         }
 
         public void TaBortKund(int kundnr) // Ta bort kund (Case4 i menyn)

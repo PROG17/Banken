@@ -46,6 +46,7 @@ namespace BankProgram
                         Case4(banken); // Ta bort kund (går endast om saldo är noll på kontona)
                         break;
                     case "5":
+                        Case5(banken);
                         Console.WriteLine("Skapa konto");
                         // Metod som skapar konto
                         break;
@@ -90,7 +91,7 @@ namespace BankProgram
             var b = banken.Kunder.FindIndex(x => x.Kundnummer == a);
             banken.Kunder[b].SkrivUtKundBild();
         }
-        private static void Case3(BANK banken) // Lägg till kund
+        private static void Case3(BANK banken) // Skapa kund
         {
             Console.WriteLine("* Lägg till kund *");
             Console.Write("Ange organisationnummer: ");
@@ -116,14 +117,20 @@ namespace BankProgram
             Console.WriteLine();
 
         }
-        private static void Case4(BANK banken) // Ta bort kund, ska endast gå om saldot är noll
+        private static void Case4(BANK banken) // Ta bort kund, ska endast gå om saldot är nolld
         {
             Console.WriteLine("* Ta bort kund *");
             Console.Write("Kundnummer? ");
             var a = int.Parse(Console.ReadLine());
             banken.TaBortKund(a);
         }
-
+        private static void Case5(BANK banken) // Skapa konto
+        {
+            Console.WriteLine("* Skapa konto *");
+            Console.Write("Kundnummer? ");
+            var a = int.Parse(Console.ReadLine());
+            banken.NyttKonto(a);
+        }
         public static void SkrivMeny(BANK banken)
         {
             
