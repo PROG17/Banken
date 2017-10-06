@@ -61,7 +61,7 @@ namespace BankProgram
                         Case9(banken); // Överföring
                         break;
                     default:
-                        Console.WriteLine("Default case");
+                        Console.WriteLine("Ange val 0-9 i siffror");
                         break;
                 }
             }
@@ -75,19 +75,36 @@ namespace BankProgram
 
         private static void Case1(BANK banken) // Sök på kundnamn eller postort
         {
+            
             Console.WriteLine("* Sök kund *");
             Console.Write("Namn eller postort? ");
             var a = Console.ReadLine();
-            banken.SkrivUtSökn(a);
+            if (banken.SkrivUtSökn(a) == false)
+            {
+                Console.WriteLine("Inga kunder med funna");
+            }
+            
+            
         }
 
         private static void Case2(BANK banken) // Visa "kundbild"
         {
             Console.WriteLine("* Visa kundbild *");
             Console.Write("Kundnummer? ");
-            var a = int.Parse(Console.ReadLine());
-            var b = banken.Kunder.FindIndex(x => x.Kundnummer == a);
-            banken.Kunder[b].SkrivUtKundBild();
+            int a;
+            var temp = int.TryParse(Console.ReadLine(), out a);
+            if (temp)
+            {
+                if (banken.Kunder.Exists(x => x.Kundnummer == a))
+                {
+                    var b = banken.Kunder.FindIndex(x => x.Kundnummer == a);
+                    banken.Kunder[b].SkrivUtKundBild();
+                }
+                else Console.WriteLine("Det kundnumret finns inte!");
+
+            }
+            else Console.WriteLine("Ange kundnumret i siffror!");
+            
         }
         private static void Case3(BANK banken) // Skapa kund
         {
@@ -134,12 +151,33 @@ namespace BankProgram
         {
             Console.WriteLine("* Ta bort konto *");
             Console.Write("Kundnummer? ");
-            var a = int.Parse(Console.ReadLine());
-            var b = banken.Kunder.FindIndex(x => x.Kundnummer == a);
-            banken.Kunder[b].SkrivUtKundKonton();
-            Console.Write("Kontonummer? ");
-            var c = int.Parse(Console.ReadLine());
-            banken.TaBortKonto(a, c);
+            int a;
+            int c;
+            var temp = int.TryParse(Console.ReadLine(), out a);
+            if (temp)
+            {
+                if (banken.Kunder.Exists(x => x.Kundnummer == a))
+                {
+                    var b = banken.Kunder.FindIndex(x => x.Kundnummer == a);
+                    banken.Kunder[b].SkrivUtKundKonton();
+                    Console.Write("Kontonummer? ");
+                    temp = int.TryParse(Console.ReadLine(), out c);
+
+                    if (temp)
+                    {
+                        if (banken.Konton.Exists(x => x.Kontonummer == c))
+                        {
+                            if (banken.Kunder[b].Kundkonton.Any(x => x.Kontonummer == c && x.Saldo == 0.00m))
+                            banken.TaBortKonto(a, c); // int kundnr, int kontonr
+                            else Console.WriteLine("Det går inte att ta bort ett konto med ett positivt saldo!");
+                        } 
+                        else Console.WriteLine("Det kontonumret existerar inte!");
+                    }
+                    else Console.WriteLine("Ange kontonumret i siffror!");
+                }
+                else Console.WriteLine("Det kundnumret finns inte!");
+            }
+            else Console.WriteLine("Ange kundnumret i siffror!");
         }
         private static void Case7(BANK banken) // Sätta in pengar
         {

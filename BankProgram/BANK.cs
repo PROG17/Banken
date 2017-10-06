@@ -236,7 +236,7 @@ namespace BankProgram
             return temp;
         }
         
-        public void SkrivUtSökn(string sökstr)  // Anropas från "Case1" i menymetoden 
+        public bool SkrivUtSökn(string sökstr)  // Anropas från "Case1" i menymetoden 
         {
 
             string sökstr2;
@@ -245,14 +245,18 @@ namespace BankProgram
             sb.Insert(0, " ");
             sökstr2 = sb.ToString().ToUpper(); // sökstr2 används för att få träff på ord i företagsnamn som består
             // av flera ord
-
+            int count = 0;
             foreach (var kund in kunder.Where(x => x.Företagsnamn.ToUpper().StartsWith(sökstr.ToUpper()) ||
                                                    x.Företagsnamn.ToUpper().Contains(sökstr2)
-                                                   || x.Postnummer.Contains(sökstr)))
+                                                   || x.Postnummer.Contains(sökstr.ToUpper())))
             {
                 kund.SkrivUtKundNr();
+                count++;
             }
 
+            if (count == 0) return false;
+            else return true;
+     
         }
     }
 }
