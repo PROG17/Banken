@@ -16,8 +16,10 @@ namespace BankProgram
         public static void MenyMetod(BANK banken)
         {
             Console.Clear();
+            bool bankenigång = true;
             SkrivMeny(banken);
-            while (true)
+            
+            do
             {
 
                 Console.Write("> ");
@@ -29,7 +31,7 @@ namespace BankProgram
                     case "0":
                         Case0(banken);
                         // Metod för att avsluta och spara till fil
-                        
+                        bankenigång = false;
                         break;
 
                     case "1": // Sök på kundnamn eller postort
@@ -65,7 +67,7 @@ namespace BankProgram
                         Console.WriteLine("Ange val 0-9 i siffror");
                         break;
                 }
-            }
+            } while (bankenigång);
         }
 
         private static void Case0(BANK banken) // Avsluta och spara
