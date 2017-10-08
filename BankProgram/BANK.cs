@@ -30,8 +30,8 @@ namespace BankProgram
         // Konstruktor
         public BANK()
         {
-            this.fil_In_Ut = new FILHANTERING("bankdata-small.txt");
-            //this.fil_In_Ut = new FILHANTERING("bankdata.txt");
+            //this.fil_In_Ut = new FILHANTERING("20171006-1319.txt");
+            this.fil_In_Ut = new FILHANTERING("bankdata.txt");
             this.kunder = new List<KUND>();
             this.konton = new List<KONTO>();
             
@@ -214,7 +214,7 @@ namespace BankProgram
             return false;
 
         }
-        public void Överföring(int frånkontonr, int tillkontonr, decimal summa) // Case9
+        public bool Överföring(int frånkontonr, int tillkontonr, decimal summa) // Case9
         {
             // Hitta index för kontonumret(från) i global listan med konton 
             var temp1 = Konton.FindIndex(x => x.Kontonummer == frånkontonr);
@@ -222,9 +222,13 @@ namespace BankProgram
             // Hitta index för kontonumret(till) i global listan med konton 
             var temp2 = Konton.FindIndex(x => x.Kontonummer == tillkontonr);
 
-            konton[temp1].Saldo -= summa; // Subtrahera summan från frånkontot
-            konton[temp2].Saldo += summa; // Addera summan till destinationskontot
-
+            if (konton[temp1].Saldo >= summa)
+            {
+                konton[temp1].Saldo -= summa; // Subtrahera summan från frånkontot
+                konton[temp2].Saldo += summa; // Addera summan till destinationskontot
+                return true;
+            }
+            else return false;
         }        
 
         public int NyttKundNr() // Returnera nytt kundnr (högsta kundnr i listan + 1)

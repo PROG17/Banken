@@ -253,35 +253,34 @@ namespace BankProgram
         }
         private static void Case9(BANK banken) // Överföring
         {
-            Console.WriteLine("* Överföring *");
-            
-            Console.Write("Från? ");
             int a;
             int b;
             decimal c;
+            Console.WriteLine("* Överföring *");
 
-            var tempA = int.TryParse(Console.ReadLine(), out a);
             Console.Write("Från? ");
-
-            var tempB = int.TryParse(Console.ReadLine(), out b);
+            var tempA = int.TryParse(Console.ReadLine(), out a);
+            
             Console.Write("Till? ");
+            var tempB = int.TryParse(Console.ReadLine(), out b);
 
             Console.Write("Summa? ");
             var tempC = decimal.TryParse(Console.ReadLine(), out c);
-            if (tempA && tempB && tempC)
+            if (tempA && tempB && tempC && c > 0.00m)
             {
                 if (banken.Konton.Exists(x => x.Kontonummer == a) && banken.Konton.Exists(x => x.Kontonummer == b))
                 {
-                    banken.Överföring(a, b, c); // int frånkontonr, int tillkontonr, decimal summa
-
-                    //  Kvarstår att fixa att det måste finnas täckning på frånkontot vid överföring!!!!
-
-                    //banken.Uttag(a, b) // int kontonr, decimal summa
-                    // banken.Insättning(a, b); // int kontonr, decimal summa
+                    if (banken.Överföring(a, b, c)) // int frånkontonr, int tillkontonr, decimal summa
+                        Console.WriteLine("Summan {0} kr överfördes från kontot {1} till kontot {2}", c, a, b);
+                    else Console.WriteLine("Täckning saknas på kontot {0}", a);
                 }
                 else Console.WriteLine("Både kontona måste existera!");
             }
-            else Console.WriteLine("Skriv kontonummer med siffror och summa med siffror och kommatecken!");
+            else
+            {
+                Console.WriteLine("Skriv kontonummer med siffror och summa med siffror och kommatecken!");
+                Console.WriteLine("Summan måste vara positiv");
+            }
         }
         public static void SkrivMeny(BANK banken) // Skriv ut bankmeny
         {
