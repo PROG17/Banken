@@ -73,6 +73,9 @@ namespace BankProgram
         private static void Case0(BANK banken) // Avsluta och spara
         {
             Console.WriteLine("* Avsluta och spara *");
+            Console.WriteLine("Antal kunder: {0}", banken.Kunder.Count);
+            Console.WriteLine("Antal konton: {0}", banken.Konton.Count);
+            Console.WriteLine("Totalt saldo: {0}", banken.TotaltSaldo());
             banken.Stop();
         }
 
